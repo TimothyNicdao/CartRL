@@ -1,0 +1,22 @@
+FROM python:3.7
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       apt-utils \
+       build-essential \
+       curl \
+       xvfb \
+       ffmpeg \
+       xorg-dev \
+       libsdl2-dev \
+       swig \
+       cmake 
+#       python-opengl
+RUN apt-get install -y python-opengl
+RUN pip3 install –upgrade pip
+COPY * .
+RUN pip3 install –trusted-host pypi.python.org -r requirements.txt
+RUN rm requirements.txt
+RUN Xvfb :1 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &> xvfb.log & 
+ENV export DISPLAY=:1
+#CMD ["python3", "CartPoleAgent.py" ]
+CMD ["python3", "CartPoleAgent.py" ]
